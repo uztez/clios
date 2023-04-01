@@ -1,12 +1,15 @@
 {
   "name": "@uztez/clios",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "CLI command-line-interface option schema",
   "main": "src/index.ts",
+  "repository": "github:uztez/clios",
   "scripts": {
     "build": "tsc",
     "debug": "tsc -p tsconfig.dev.json --watch",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "prepublish": "npm run build",
+    "publish": "npm publish --access=public ./dist"
   },
   "keywords": [
     "cli",
