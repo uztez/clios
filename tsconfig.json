@@ -1,0 +1,10 @@
+{
+  "extends": "@tsconfig/recommended/tsconfig.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "./dist",
+    "resolveJsonModule": true
+  },
+  "include": ["package.json", "src/**/*.ts"],
+  "exclude": ["src/**/*.spec.ts"]
+}
