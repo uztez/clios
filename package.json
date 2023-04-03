@@ -1,8 +1,8 @@
 {
   "name": "@uztez/clios",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "CLI command-line-interface option schema",
-  "main": "src/index.ts",
+  "main": "src/index.js",
   "repository": "github:uztez/clios",
   "scripts": {
     "build": "tsc",
