@@ -1,11 +1,12 @@
 {
   "name": "@uztez/clios",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "CLI command-line-interface option schema",
   "main": "src/index.js",
   "repository": "github:uztez/clios",
   "scripts": {
     "build": "tsc",
+    "postbuild": "copyfiles README.md ./dist",
     "debug": "tsc -p tsconfig.dev.json --watch",
     "test": "jest --coverage",
     "prepublish": "npm run build",
@@ -26,8 +27,9 @@
     "@types/jest": "^29.5.0",
     "@types/lodash": "^4.14.192",
     "@types/node": "^18.15.11",
+    "copyfiles": "^2.4.1",
     "jest": "^29.5.0",
-    "ts-jest": "^29.0.5",
+    "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.3",
     "zone.js": "^0.13.0"
