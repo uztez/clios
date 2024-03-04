@@ -1,8 +1,6 @@
 import { CliosParser } from './parser';
-import { getHelpText } from './shared';
 import { Clios } from './clios';
-
-jest.mock('./shared');
+import { CliosPrinter } from './printer';
 
 describe('Clios', () => {
   afterAll(() => {
@@ -10,8 +8,10 @@ describe('Clios', () => {
   });
   it('create with parser', () => {
     jest.spyOn(CliosParser, 'of');
+    jest.spyOn(CliosPrinter, 'of');
     Clios.of([], []);
     expect(CliosParser.of).toHaveBeenCalled();
+    expect(CliosPrinter.of).toHaveBeenCalled();
   });
   it('parse', () => {
     let clios = Clios.of([['all']], '--all');
@@ -25,22 +25,10 @@ describe('Clios', () => {
     clios.parse();
     expect(clios.parser.parse).toHaveBeenCalledWith(['--all'], false);
   });
-  it('get help text', () => {
-    jest.spyOn(CliosParser, 'of').mockReturnValue(new CliosParser([]));
-    let clios = Clios.of([], '-h');
-    expect(clios.isHelp).toBe(true);
-    jest.spyOn(clios.parser, 'getHelpMeta');
-    clios.getHelpText({ prefix: 'app', suffix: 'args', shell: true });
-    expect(getHelpText).toBeCalled();
-    expect(clios.parser.getHelpMeta).toBeCalled();
-  });
-  it('get help text with no arg set', () => {
-    jest.spyOn(CliosParser, 'of').mockReturnValue(new CliosParser([]));
-    let clios = Clios.of([], '-h');
-    expect(clios.isHelp).toBe(true);
-    jest.spyOn(clios.parser, 'getHelpMeta').mockReturnValue({ summaries: [], options: [] });
-    clios.getHelpText();
-    expect(clios.parser.getHelpMeta).toBeCalled();
-    expect(getHelpText).toBeCalledWith({ meta: { summaries: [], options: [] }, prefix: '<command>', suffix: '', shell: false });
+  it('parse with no strict set', () => {
+    let clios = Clios.of([['all']], '--all');
+    jest.spyOn(clios.printer, 'print').mockImplementation();
+    clios.print();
+    expect(clios.printer.print).toHaveBeenCalledWith({ prefix: '<command>', suffix: '', shell: false });
   });
 });

@@ -1,6 +1,6 @@
 import { CliosError } from './error';
 import { Option, OptionDefinition } from './option';
-import { CliosOutput, CliosSchema } from './schema';
+import { CliosHelpMeta, CliosHelpMetaOption, CliosOutput, CliosSchema } from './schema';
 import { has, isUndefined } from 'lodash';
 import { toBoolean } from './shared';
 
@@ -18,7 +18,7 @@ export class CliosParser {
     IS_LONG_OPTION: /^--((?:no-)?)([a-zA-Z](?:[\w-]*[\w])?)(?:=(.*))?$/,
   };
 
-  definitions: OptionDefinition[];
+  public definitions: OptionDefinition[];
 
   constructor(public schemas: CliosSchema[]) {
     this.definitions = schemas.map((item) => OptionDefinition.of(item));
@@ -119,7 +119,7 @@ export class CliosParser {
     },
   };
 
-  parse(args: string[], strict: boolean = false): CliosOutput {
+  parse = (args: string[], strict: boolean = false): CliosOutput => {
     let arr = [...args];
     let defaultOptions = this.getDefaultOptions();
     let result: CliosOutput = { options: {}, values: [] };
@@ -167,7 +167,7 @@ export class CliosParser {
     // merge with default options
     result.options = { ...defaultOptions, ...result.options };
     return result;
-  }
+  };
 
   getDefaultOptions = () => {
     return this.definitions.reduce((all, def) => {
@@ -176,41 +176,5 @@ export class CliosParser {
       }
       return all;
     }, {} as any);
-  };
-
-  getHelpMeta = () => {
-    let summaries = this.definitions.reduce((all, def) => {
-      let summary;
-      if (def.type === 'boolean') {
-        if (def.short) {
-          summary = `[-${def.short} | --${def.name}]`;
-        } else {
-          summary = `[--${def.name}]`;
-        }
-      } else {
-        if (def.short) {
-          summary = `[-${def.short} <value> | --${def.name}=<value>]`;
-        } else {
-          summary = `[--${def.name}=<value>]`;
-        }
-        if (def.type === 'array') {
-          summary += '*';
-        }
-      }
-      return [...all, summary];
-    }, [] as string[]);
-    let options = this.definitions.reduce((all, def) => {
-      let lines: [string, string, string, string?][] = [];
-      let suffix = def.type === 'boolean' ? '' : '=<value>';
-      lines.push([def.short, `${def.name}${suffix}`, def.description]);
-      if (!isUndefined(def.defaultValue)) {
-        lines[0].push(String(def.defaultValue));
-      }
-      def.aliases.forEach((alias) => {
-        lines.push(['', `${alias}${suffix}`, `alias of ${def.name}`]);
-      });
-      return [...all, ...lines];
-    }, [] as [string, string, string, string?][]);
-    return { summaries, options };
   };
 }

@@ -23,9 +23,16 @@
  * 1. `port=80` default value will be string `'80'`
  * 1. `port=` default value will be `undefined`
  *
- * @type
+ * @type CliasSchema
  */
 export type CliosSchema = [string, string?];
+
+export type CliosHelpMetaOption = [string, string, string, string?];
+
+export type CliosHelpMeta = {
+  summaries?: string[];
+  options?: CliosHelpMetaOption[];
+};
 
 export type CliosOutput = {
   options: { [k: string]: any };

@@ -1,13 +1,14 @@
 import { isArray } from 'lodash';
 import { CliosParser } from './parser';
 import { CliosSchema } from './schema';
-import { getHelpText } from './shared';
+import { CliosPrinter } from './printer';
 
 export class Clios {
   static of = (schemas: CliosSchema[], args: string | string[]) => {
     return new Clios(schemas, args);
   };
 
+  printer: CliosPrinter;
   parser: CliosParser;
   argv: string[];
   isHelp: boolean;
@@ -19,10 +20,10 @@ export class Clios {
     this.isHelp = args === '-h' || args === '--help';
     this.argv = (args as string).split(' ');
     this.parser = CliosParser.of(schemas);
+    this.printer = CliosPrinter.of(this.parser.definitions);
   }
 
   parse = (strict: boolean = false) => this.parser.parse(this.argv, strict);
-  getHelpMeta = () => this.parser.getHelpMeta();
-  getHelpText = ({ prefix = '<command>', suffix = '', shell = false }: { prefix?: string; suffix?: string; shell?: boolean } = {}) =>
-    getHelpText({ meta: this.getHelpMeta(), prefix, suffix, shell });
+  print = ({ prefix = '<command>', suffix = '', shell = false }: { prefix?: string; suffix?: string; shell?: boolean } = {}) =>
+    this.printer.print({ prefix, suffix, shell });
 }

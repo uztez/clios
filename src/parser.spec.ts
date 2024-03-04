@@ -6,7 +6,7 @@ describe('CliosParser', () => {
   beforeEach(() => {
     parser = CliosParser.of([
       ['tags|tag*', 'the tags'],
-      ['host=localhost', 'the host'],
+      ['host|hosts=localhost', 'the host'],
       ['port(p)=1080', 'the port'],
       ['lazy(L)', 'load it lazily'],
       ['silence(s)', 'show no output'],
@@ -111,6 +111,12 @@ describe('CliosParser', () => {
         options: { host },
       }: CliosOutput = parser.parse('--host=foo.com'.split(' '));
       expect({ host }).toEqual({ host: 'foo.com' });
+    });
+    it('understands string alias option with value', () => {
+      let {
+        options: { host, hosts },
+      }: CliosOutput = parser.parse('--hosts=foo.com'.split(' '));
+      expect({ host, hosts }).toEqual({ host: 'foo.com', hosts: undefined });
     });
     it('understands string option with value after', () => {
       let {
@@ -220,23 +226,6 @@ describe('CliosParser', () => {
         exception = e;
       }
       expect(exception).toBeTruthy();
-    });
-  });
-  describe('help meta', () => {
-    it('contains all help detail', () => {
-      let meta = parser.getHelpMeta();
-      expect(meta).toEqual({
-        summaries: ['[--tags=<value>]*', '[--host=<value>]', '[-p <value> | --port=<value>]', '[-L | --lazy]', '[-s | --silence]', '[--no-proxy]'],
-        options: [
-          ['', 'tags=<value>', 'the tags'],
-          ['', 'tag=<value>', 'alias of tags'],
-          ['', 'host=<value>', 'the host', 'localhost'],
-          ['p', 'port=<value>', 'the port', '1080'],
-          ['L', 'lazy', 'load it lazily'],
-          ['s', 'silence', 'show no output'],
-          ['', 'no-proxy', 'use no proxy'],
-        ],
-      });
     });
   });
 });
