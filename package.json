@@ -1,6 +1,6 @@
 {
   "name": "@uztez/clios",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "CLI command-line-interface option schema",
   "main": "src/index.js",
   "repository": "github:uztez/clios",
